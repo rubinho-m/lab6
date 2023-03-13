@@ -36,14 +36,14 @@ public class Main {
 //            collectionManager.setPath(args[0]);
 //
             NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 2828);
+            networkConnection.connectionManage();
             Scanner scanner = new Scanner(System.in);
 //            CommandExecutor commandExecutor = new CommandExecutor();
 //            commandExecutor.setCommands(collectionManager);
             CommandParser commandParser = new CommandParser();
 
-
-            networkConnection.send();
-            networkConnection.receive();
+//            networkConnection.send();
+//            networkConnection.receive();
 
             Request request = null;
             Response response;
