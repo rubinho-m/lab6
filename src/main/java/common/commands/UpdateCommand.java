@@ -8,12 +8,13 @@
 package common.commands;
 
 import common.exceptions.EmptyCollectionException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
 import java.util.Set;
 
-public class UpdateCommand extends CommandTemplate implements Command{
+public class UpdateCommand extends CommandTemplate implements CommandWithResponse{
     public UpdateCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -36,5 +37,10 @@ public class UpdateCommand extends CommandTemplate implements Command{
         Ticket.setLastId((long) Integer.parseInt(getArg()) - 1);
         collectionManager.addToCollection(newTicket);
         Ticket.setLastId(tmpId);
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

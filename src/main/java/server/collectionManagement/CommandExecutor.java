@@ -8,12 +8,13 @@ package server.collectionManagement;
 import common.commands.*;
 import common.dataStructures.ParsedString;
 import common.exceptions.WrongScriptException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 
 import java.util.*;
 
 public class CommandExecutor {
-    private static final HashMap<String, Command> commandMap = new HashMap<>();
+    private static final HashMap<String, CommandWithResponse> commandMap = new HashMap<>();
     private Set<String> paths = new HashSet<>();
 
     public Set<String> getPaths() {
@@ -28,7 +29,7 @@ public class CommandExecutor {
         paths.add(path);
     }
 
-    public static HashMap<String, Command> getCommandMap() {
+    public static HashMap<String, CommandWithResponse> getCommandMap() {
         return commandMap;
     }
 
@@ -58,11 +59,11 @@ public class CommandExecutor {
         commandMap.put("execute_script", new ExecuteScriptCommand(collectionManager, this));
     }
 
-    public void execute(ParsedString<ArrayList<String>, Ticket> parsedString, Scanner scanner, boolean isFile) throws Exception {
+    public Response execute(ParsedString<ArrayList<String>, Ticket> parsedString) throws Exception {
 
         try {
             ArrayList<String> commandWithArgs = parsedString.getArray();
-            Command command = commandMap.get(commandWithArgs.get(0));
+            CommandWithResponse command = commandMap.get(commandWithArgs.get(0));
             if (command == null) {
                 throw new IllegalStateException("No command registered for " + commandWithArgs.get(0));
             }
@@ -79,8 +80,11 @@ public class CommandExecutor {
             command.setTicket(inputTicket);
             HistoryManager.addToHistory(commandWithArgs.get(0));
             command.execute();
+            Response response = command.getCommandResponse();
+            return response;
         } catch (WrongScriptException e) {
             System.out.println(e.getMessage());
+            return new Response("Wrong script");
         }
     }
 }

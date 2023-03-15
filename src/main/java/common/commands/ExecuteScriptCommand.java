@@ -7,6 +7,7 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 import server.collectionManagement.CommandExecutor;
 import common.dataStructures.ParsedString;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class ExecuteScriptCommand extends CommandTemplate implements Command {
+public class ExecuteScriptCommand extends CommandTemplate implements CommandWithResponse {
     private final CommandExecutor commandExecutor;
 
     public ExecuteScriptCommand(CollectionManager collectionManager, CommandExecutor commandExecutor) {
@@ -41,7 +42,7 @@ public class ExecuteScriptCommand extends CommandTemplate implements Command {
             while (true) {
                 try {
                     ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, true);
-                    commandExecutor.execute(parsedString, scanner, true);
+                    commandExecutor.execute(parsedString);
                 } catch (Exception e) {
                     break;
                 }
@@ -56,5 +57,10 @@ public class ExecuteScriptCommand extends CommandTemplate implements Command {
             System.out.println("Some troubles with your script. Please fix it");
         }
 
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

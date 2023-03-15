@@ -8,6 +8,7 @@
 package common.commands;
 
 import common.exceptions.EmptyCollectionException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import common.structureClasses.Venue;
 import server.collectionManagement.CollectionManager;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PrintFieldDescendingVenueCommand extends CommandTemplate implements Command{
+public class PrintFieldDescendingVenueCommand extends CommandTemplate implements CommandWithResponse{
     public PrintFieldDescendingVenueCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -37,5 +38,10 @@ public class PrintFieldDescendingVenueCommand extends CommandTemplate implements
         for (Venue venue : venues){
             System.out.println(venue);
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

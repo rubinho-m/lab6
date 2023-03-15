@@ -7,9 +7,10 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 
-public class ClearCommand extends CommandTemplate implements Command{
+public class ClearCommand extends CommandTemplate implements CommandWithResponse{
     public ClearCommand(CollectionManager collectionManager){
         super(collectionManager);
     }
@@ -17,5 +18,10 @@ public class ClearCommand extends CommandTemplate implements Command{
     public void execute() {
         getCollectionManager().getCollection().clear();
         System.out.println("Now collection is empty");
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

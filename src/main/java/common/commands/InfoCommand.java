@@ -7,9 +7,11 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 
-public class InfoCommand extends CommandTemplate implements Command {
+public class InfoCommand extends CommandTemplate implements CommandWithResponse {
+    private StringBuilder output;
     public InfoCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -17,12 +19,18 @@ public class InfoCommand extends CommandTemplate implements Command {
     @Override
     public void execute() {
         try {
+            output = new StringBuilder();
             CollectionManager collection = getCollectionManager();
-            System.out.println("Type of collection: Ticket" + "\n" +
+            output.append("Type of collection: Ticket" + "\n" +
                     "creationDate: " + collection.getFirstElement().getCreationDate() + "\n" +
                     "size of collection: " + collection.getCollection().size());
         } catch (Exception e){
-            System.out.println("Collection is empty");
+            output.append("Collection is empty");
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return new Response(output.toString());
     }
 }

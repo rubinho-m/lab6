@@ -7,10 +7,14 @@
 
 package common.commands;
 
-public class HelpCommand extends CommandTemplate implements Command{
+import common.networkStructures.Response;
+
+public class HelpCommand extends CommandTemplate implements CommandWithResponse{
+    private StringBuilder output;
     @Override
     public void execute() {
-        System.out.println("Help on available commands: " + "\n" +
+        output = new StringBuilder();
+        output.append("Help on available commands: " + "\n" +
                 "help: display help on available commands" + "\n" +
                 "info: display collection information" + "\n" +
                 "show: display all collection elements" + "\n" +
@@ -27,5 +31,10 @@ public class HelpCommand extends CommandTemplate implements Command{
                 "min_by_price: display any collection element which is lower than entered" + "\n" +
                 "filter_greater_than_price: display elements which have price greater than entered" + "\n" +
                 "print_field_descending_venue: display all venue values in descending order");
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return new Response(output.toString());
     }
 }

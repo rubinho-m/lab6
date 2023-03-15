@@ -8,11 +8,12 @@
 package common.commands;
 
 import common.exceptions.EmptyHistoryException;
+import common.networkStructures.Response;
 
 import java.util.Collections;
 import java.util.List;
 
-public class HistoryCommand extends CommandTemplate implements Command {
+public class HistoryCommand extends CommandTemplate implements CommandWithResponse {
     public HistoryCommand() {
 
     }
@@ -33,5 +34,10 @@ public class HistoryCommand extends CommandTemplate implements Command {
         for (String command: historyToPrint) {
             System.out.println(command);
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

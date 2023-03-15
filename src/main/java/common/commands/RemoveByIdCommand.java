@@ -8,10 +8,11 @@
 package common.commands;
 
 import common.exceptions.EmptyCollectionException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
-public class RemoveByIdCommand extends CommandTemplate implements Command{
+public class RemoveByIdCommand extends CommandTemplate implements CommandWithResponse{
     public RemoveByIdCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -28,5 +29,10 @@ public class RemoveByIdCommand extends CommandTemplate implements Command{
                 break;
             }
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

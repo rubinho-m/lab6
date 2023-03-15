@@ -8,13 +8,14 @@
 package common.commands;
 
 import common.exceptions.EmptyCollectionException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class RemoveGreaterCommand extends CommandTemplate implements Command{
+public class RemoveGreaterCommand extends CommandTemplate implements CommandWithResponse{
     public RemoveGreaterCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -34,5 +35,10 @@ public class RemoveGreaterCommand extends CommandTemplate implements Command{
         for (Ticket ticketToRemove : removeTickets){
             tickets.remove(ticketToRemove);
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

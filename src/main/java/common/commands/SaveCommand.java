@@ -8,12 +8,13 @@
 package common.commands;
 
 import common.exceptions.XMLTroubleException;
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 import server.xml.TicketXMLWriter;
 
 import java.io.IOException;
 
-public class SaveCommand extends CommandTemplate implements Command {
+public class SaveCommand extends CommandTemplate implements CommandWithResponse {
 
     public SaveCommand(CollectionManager collectionManager) {
         super(collectionManager);
@@ -27,5 +28,10 @@ public class SaveCommand extends CommandTemplate implements Command {
         } catch (XMLTroubleException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

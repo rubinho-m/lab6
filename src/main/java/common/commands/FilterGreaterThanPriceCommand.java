@@ -7,12 +7,13 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 import common.structureClasses.Ticket;
 
 import java.util.Set;
 
-public class FilterGreaterThanPriceCommand extends CommandTemplate implements Command{
+public class FilterGreaterThanPriceCommand extends CommandTemplate implements CommandWithResponse{
     public FilterGreaterThanPriceCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -25,5 +26,10 @@ public class FilterGreaterThanPriceCommand extends CommandTemplate implements Co
                 System.out.println(ticket);
             }
         }
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

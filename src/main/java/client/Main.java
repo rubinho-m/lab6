@@ -28,25 +28,32 @@ public class Main {
      * @throws IOException         if there is an error reading the XML file.
      * @throws XMLTroubleException if there is an error parsing the XML file.
      */
-    public static void main(String[] args) throws IOException, XMLTroubleException, UnmarshalException {
+    public static void main(String[] args) throws Exception {
         try {
 //            CollectionManager collectionManager = new CollectionManager();
 //            TicketXMLParser xmlParser = new TicketXMLParser(args[0]);
 //            collectionManager.setCollection(xmlParser.parse());
 //            collectionManager.setPath(args[0]);
 //
-            NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 2828);
-            networkConnection.connectionManage();
             Scanner scanner = new Scanner(System.in);
+            CommandParser commandParser = new CommandParser();
+            NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 2828);
+
+            while (true) {
+                ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
+                ArrayList<String> commandWithArguments = parsedString.getArray();
+                Ticket ticket = parsedString.getTicket();
+                Request request = new Request(commandWithArguments, ticket);
+                networkConnection.connectionManage(request);
+                Response response = networkConnection.getReturnResponse();
+                System.out.println(response.getOutput());
+            }
+
+
 //            CommandExecutor commandExecutor = new CommandExecutor();
 //            commandExecutor.setCommands(collectionManager);
-            CommandParser commandParser = new CommandParser();
 
-//            networkConnection.send();
-//            networkConnection.receive();
 
-            Request request = null;
-            Response response;
 
 //            while (true) {
 //                try {

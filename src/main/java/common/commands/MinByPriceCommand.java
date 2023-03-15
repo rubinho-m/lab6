@@ -8,12 +8,13 @@
 package common.commands;
 
 import common.exceptions.EmptyCollectionException;
+import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
 import java.util.*;
 
-public class MinByPriceCommand extends CommandTemplate implements Command{
+public class MinByPriceCommand extends CommandTemplate implements CommandWithResponse{
     public MinByPriceCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -34,5 +35,10 @@ public class MinByPriceCommand extends CommandTemplate implements Command{
         Ticket ticketToPrint = ticketMap.get(minPrice);
         System.out.println(ticketToPrint);
 
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

@@ -7,10 +7,11 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 import common.exceptions.EmptyCollectionException;
 
-public class ShowCommand extends CommandTemplate implements Command{
+public class ShowCommand extends CommandTemplate implements CommandWithResponse{
     public ShowCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -21,5 +22,10 @@ public class ShowCommand extends CommandTemplate implements Command{
             throw new EmptyCollectionException();
         }
         getCollectionManager().printCollection();
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

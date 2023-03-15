@@ -7,8 +7,9 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
-public class AddCommand extends CommandTemplate implements Command {
+public class AddCommand extends CommandTemplate implements CommandWithResponse {
     public AddCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -16,5 +17,10 @@ public class AddCommand extends CommandTemplate implements Command {
     @Override
     public void execute() {
         getCollectionManager().addToCollection(getTicket());
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

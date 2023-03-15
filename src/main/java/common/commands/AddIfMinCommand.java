@@ -7,6 +7,7 @@
 
 package common.commands;
 
+import common.networkStructures.Response;
 import server.collectionManagement.CollectionManager;
 import server.collectionManagement.CommandExecutor;
 import common.exceptions.EmptyCollectionException;
@@ -17,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class AddIfMinCommand extends CommandTemplate implements Command{
+public class AddIfMinCommand extends CommandTemplate implements CommandWithResponse{
     public AddIfMinCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -40,5 +41,10 @@ public class AddIfMinCommand extends CommandTemplate implements Command{
 
 
 
+    }
+
+    @Override
+    public Response getCommandResponse() {
+        return null;
     }
 }

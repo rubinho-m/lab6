@@ -1,17 +1,22 @@
 package client;
 
+import client.io.commandParsing.CommandParser;
+import common.dataStructures.ParsedString;
 import common.networkStructures.Request;
 import common.networkStructures.Response;
+import common.structureClasses.Ticket;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
@@ -19,9 +24,10 @@ import java.util.Set;
 public class NetworkConnection {
     private final int BUFFER_SIZE = 1024 * 1024;
     private InetAddress host;
+    private Response returnResponse;
+
     int port;
     SocketAddress socketAddress;
-    byte[] arr = {0, 1, 2, 3, 4, 5};
     SocketChannel socketChannel;
 
     public NetworkConnection(String address, int port) throws UnknownHostException {
@@ -29,24 +35,19 @@ public class NetworkConnection {
         this.socketAddress = new InetSocketAddress(host, port);
     }
 
-    public void connectionManage() throws IOException {
+    public Response getReturnResponse() {
+        return returnResponse;
+    }
+
+    public void connectionManage(Request request) throws Exception {
+
+        Selector selector = Selector.open();
         socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
-        Selector selector = Selector.open();
-        socketChannel.register(selector, SelectionKey.OP_CONNECT);
         socketChannel.connect(socketAddress);
+        socketChannel.register(selector, SelectionKey.OP_CONNECT);
 
-        Thread keyboardThread = new Thread(() -> {
-            Scanner scanner = new Scanner(System.in);
-            while (true) {
-                if (scanner.hasNextLine()) {
-                    String input = scanner.nextLine();
-                    System.out.println(input + " урааа!!!");
-                }
-            }
-        });
-        keyboardThread.start();
-
+        loop:
         while (true) {
             selector.select();
             Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
@@ -59,17 +60,39 @@ public class NetworkConnection {
                     }
                 }
                 if (key.isWritable()) {
-                    ByteBuffer buf = ByteBuffer.wrap(arr);
-                    socketChannel.write(buf);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+                    objectOutputStream.writeObject(request);
+
+
+                    ByteBuffer buf = ByteBuffer.wrap(out.toByteArray());
+                    buf.rewind();
+
+                    while (buf.hasRemaining()) {
+                        socketChannel.write(buf);
+                    }
+                    System.out.println(request.getCommandWithArguments());
+                    buf.clear();
+                    out.close();
+                    objectOutputStream.close();
                     socketChannel.register(selector, SelectionKey.OP_READ);
                 }
                 if (key.isReadable()) {
-                    ByteBuffer buf = ByteBuffer.wrap(arr);
+                    byte[] data = new byte[BUFFER_SIZE];
+                    ByteBuffer buf = ByteBuffer.wrap(data);
+                    buf.clear();
                     socketChannel.read(buf);
-                    for (byte j : arr) {
-                        System.out.println(j);
-                    }
-                    socketChannel.register(selector, SelectionKey.OP_WRITE);
+                    ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+                    Response response = (Response) objectInputStream.readObject();
+                    returnResponse = response;
+                    System.out.println(response.getOutput());
+                    buf.clear();
+                    byteArrayInputStream.close();
+                    objectInputStream.close();
+                    socketChannel.close();
+                    break loop;
+
                 }
                 keyIterator.remove();
             }
@@ -77,20 +100,4 @@ public class NetworkConnection {
     }
 
 
-    public void send() throws IOException {
-        socketChannel = SocketChannel.open();
-        socketChannel.connect(socketAddress);
-        ByteBuffer buf = ByteBuffer.wrap(arr);
-        socketChannel.write(buf);
-    }
-
-    public void receive() throws IOException {
-        Response response;
-        ByteBuffer buf = ByteBuffer.wrap(arr);
-        socketChannel.read(buf);
-        for (byte j : arr) {
-            System.out.println(j);
-        }
-
-    }
 }
