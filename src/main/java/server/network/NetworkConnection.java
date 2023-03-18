@@ -1,4 +1,4 @@
-package server;
+package server.network;
 
 import common.dataStructures.ParsedString;
 import common.networkStructures.Request;
@@ -35,45 +35,14 @@ public class NetworkConnection {
         this.commandExecutor = commandExecutor;
 
     }
-    public void handleCommand(){
 
-    }
     public void start() throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
+        Reader reader = new Reader(serverSocket, commandExecutor);
+        reader.read();
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("New client connected: " + clientSocket.getInetAddress().getHostAddress());
 
-            try (InputStream inputStream = clientSocket.getInputStream();
-                 OutputStream outputStream = clientSocket.getOutputStream();
-                 ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
-
-                while (true) {
-                    Request request = (Request) objectInputStream.readObject();
-                    ArrayList<String> commandWithArguments = request.getCommandWithArguments();
-                    System.out.println(commandWithArguments);
-                    Ticket ticket = (Ticket) request.getTicket();
-                    ParsedString<ArrayList<String>, Ticket> parsedString = new ParsedString<>(commandWithArguments, ticket);
-                    Response response = commandExecutor.execute(parsedString);
-
-                    System.out.println(response.getOutput());
-
-//                    clientSocket.setSoTimeout(1000);
-
-                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-                    objectOutputStream.writeObject(response);
-                    byte[] newArray = byteArrayOutputStream.toByteArray();
-                    outputStream.write(newArray);
-                    outputStream.flush();
-                    clientSocket.setSoTimeout(1000);
-                }
-            } catch (Exception e) {
-                System.out.println("Client disconnected: " + e.getMessage());
-            }
-        }
     }
 
 

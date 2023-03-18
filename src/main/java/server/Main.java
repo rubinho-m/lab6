@@ -1,16 +1,9 @@
 package server;
 
-import common.dataStructures.ParsedString;
-import common.networkStructures.Request;
-import common.networkStructures.Response;
-import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 import server.collectionManagement.CommandExecutor;
+import server.network.NetworkConnection;
 import server.xml.TicketXMLParser;
-
-import javax.xml.bind.UnmarshalException;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
