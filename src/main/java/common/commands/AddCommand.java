@@ -21,6 +21,6 @@ public class AddCommand extends CommandTemplate implements CommandWithResponse {
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response("Added");
     }
 }

@@ -50,7 +50,11 @@ public class TicketXMLParser extends TicketXMLWorker {
             Ticket.setLastId(0L);
 
             for (Ticket ticket : collection.getCollection()) {
-                ticket.setId(Ticket.getLastId() + 1);
+                Long nowID = Ticket.getLastId() + 1;
+                ticket.setId(nowID);
+                if (ticket.getVenue() != null){
+                    ticket.getVenue().setId(Math.toIntExact(nowID));
+                }
                 Ticket.increaseId();
                 ticket.setCreationDate(LocalDate.now());
             }

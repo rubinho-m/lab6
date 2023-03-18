@@ -14,8 +14,11 @@ import server.collectionManagement.CollectionManager;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class RemoveGreaterCommand extends CommandTemplate implements CommandWithResponse{
+public class RemoveGreaterCommand extends CommandTemplate implements CommandWithResponse {
+    private StringBuilder output;
+
     public RemoveGreaterCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -23,22 +26,20 @@ public class RemoveGreaterCommand extends CommandTemplate implements CommandWith
     @Override
     public void execute() throws EmptyCollectionException {
         Set<Ticket> tickets = getCollectionManager().getCollection();
-        if (tickets.size() == 0){
-            throw new EmptyCollectionException();
+        output = new StringBuilder();
+        if (tickets.size() == 0) {
+            output.append("Collection is empty, please add ticket");
+        } else {
+            output.append("Removed");
         }
-        Set<Ticket> removeTickets = new LinkedHashSet<>();
-        for (Ticket ticket : tickets){
-            if (ticket.compareTo(getTicket()) > 0){
-                removeTickets.add(ticket);
-            }
-        }
-        for (Ticket ticketToRemove : removeTickets){
-            tickets.remove(ticketToRemove);
-        }
+        getCollectionManager().setCollection(tickets.stream().
+                filter(ticket -> ticket.compareTo(getTicket()) <= 0).
+                collect(Collectors.toSet()));
+
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output.toString());
     }
 }

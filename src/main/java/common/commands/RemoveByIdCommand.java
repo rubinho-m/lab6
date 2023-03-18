@@ -13,6 +13,7 @@ import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
 public class RemoveByIdCommand extends CommandTemplate implements CommandWithResponse{
+    private String output;
     public RemoveByIdCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -21,7 +22,9 @@ public class RemoveByIdCommand extends CommandTemplate implements CommandWithRes
     public void execute() throws EmptyCollectionException {
         CollectionManager collectionManager = getCollectionManager();
         if (collectionManager.getCollection().size() == 0){
-            throw new EmptyCollectionException();
+            output = "Collection is empty, please add ticket";
+        } else {
+            output = "Removed";
         }
         for (Ticket ticketToRemove : collectionManager.getCollection()){
             if (ticketToRemove.getId() == Integer.parseInt(getArg())){
@@ -33,6 +36,6 @@ public class RemoveByIdCommand extends CommandTemplate implements CommandWithRes
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output);
     }
 }

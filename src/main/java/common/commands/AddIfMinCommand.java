@@ -45,6 +45,6 @@ public class AddIfMinCommand extends CommandTemplate implements CommandWithRespo
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response("Added");
     }
 }

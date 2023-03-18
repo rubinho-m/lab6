@@ -35,7 +35,6 @@ public class Reader {
                     Ticket ticket = (Ticket) request.getTicket();
                     ParsedString<ArrayList<String>, Ticket> parsedString = new ParsedString<>(commandWithArguments, ticket);
 
-
                     Handler handler = new Handler(commandExecutor, outputStream);
                     handler.handleCommand(parsedString);
                 }

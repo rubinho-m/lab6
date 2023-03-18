@@ -12,6 +12,8 @@ import server.collectionManagement.CollectionManager;
 import common.exceptions.EmptyCollectionException;
 
 public class ShowCommand extends CommandTemplate implements CommandWithResponse{
+    private StringBuilder output;
+    private StringBuilder outputCollection;
     public ShowCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -19,13 +21,15 @@ public class ShowCommand extends CommandTemplate implements CommandWithResponse{
     @Override
     public void execute() throws EmptyCollectionException {
         if (getCollectionManager().getCollection().size() == 0){
-            throw new EmptyCollectionException();
+            output = new StringBuilder();
+            output.append("Collection is empty, please add ticket");
+        } else {
+            output = getCollectionManager().printCollection();
         }
-        getCollectionManager().printCollection();
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output.toString());
     }
 }

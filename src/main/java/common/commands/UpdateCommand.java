@@ -12,9 +12,11 @@ import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class UpdateCommand extends CommandTemplate implements CommandWithResponse{
+    private String output = null;
     public UpdateCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -24,7 +26,7 @@ public class UpdateCommand extends CommandTemplate implements CommandWithRespons
         CollectionManager collectionManager = getCollectionManager();
         Set<Ticket> tickets = collectionManager.getCollection();
         if (tickets.size() == 0){
-            throw new EmptyCollectionException();
+            output = "Collection is empty";
         }
         for (Ticket ticketToUpdate: tickets){
             if (ticketToUpdate.getId() == Integer.parseInt(getArg())){
@@ -41,6 +43,6 @@ public class UpdateCommand extends CommandTemplate implements CommandWithRespons
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(Objects.requireNonNullElse(output, "Element has been updated"));
     }
 }

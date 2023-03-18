@@ -1,7 +1,6 @@
 /**
-
- The Coordinates class represents the coordinates of a ticket point.
- It provides methods to access and modify the x and y coordinates.
+ * The Coordinates class represents the coordinates of a ticket point.
+ * It provides methods to access and modify the x and y coordinates.
  */
 
 package common.structureClasses;
@@ -12,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Coordinates implements Serializable {
+public class Coordinates implements Serializable, Comparable<Coordinates> {
     /**
      * The x coordinate of the point.
      */
@@ -43,4 +42,19 @@ public class Coordinates implements Serializable {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        return "Coordinate object:" + "\n" +
+                "x coordinate: " + this.x + '\n' +
+                "y coordinate: " + this.y + '\n';
+    }
+
+    @Override
+    public int compareTo(Coordinates o) {
+        int res = Float.compare(this.x, o.x);
+        if (res == 0) {
+            res = Integer.compare(this.y, o.y);
+        }
+        return res;
+    }
 }

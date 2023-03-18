@@ -15,6 +15,7 @@ public class Writer {
     }
 
     public void write(Response response) throws IOException {
+        System.out.println(response.getOutput());
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
         objectOutputStream.writeObject(response);

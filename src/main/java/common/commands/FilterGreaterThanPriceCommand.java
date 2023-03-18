@@ -12,8 +12,10 @@ import server.collectionManagement.CollectionManager;
 import common.structureClasses.Ticket;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FilterGreaterThanPriceCommand extends CommandTemplate implements CommandWithResponse{
+    private StringBuilder output;
     public FilterGreaterThanPriceCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -21,15 +23,17 @@ public class FilterGreaterThanPriceCommand extends CommandTemplate implements Co
     @Override
     public void execute() {
         Set<Ticket> tickets = getCollectionManager().getCollection();
-        for (Ticket ticket : tickets){
-            if (ticket.getPrice() > Float.parseFloat(getArg())){
-                System.out.println(ticket);
-            }
-        }
+        output = new StringBuilder();
+        String result = tickets.stream()
+                .filter(ticket -> ticket.getPrice() > Float.parseFloat(getArg()))
+                .map(Ticket::toString)
+                .collect(Collectors.joining());
+        output.append(result);
+
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output.toString());
     }
 }

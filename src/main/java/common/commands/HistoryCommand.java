@@ -12,8 +12,10 @@ import common.networkStructures.Response;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HistoryCommand extends CommandTemplate implements CommandWithResponse {
+    private StringBuilder output;
     public HistoryCommand() {
 
     }
@@ -24,20 +26,17 @@ public class HistoryCommand extends CommandTemplate implements CommandWithRespon
         if (history.size() == 0){
             throw new EmptyHistoryException();
         }
-        List<String> historyToPrint;
-        Collections.reverse(history);
-        if (history.size() >= 10) {
-            historyToPrint = history.subList(0, 10);
-        } else {
-            historyToPrint = history;
-        }
-        for (String command: historyToPrint) {
-            System.out.println(command);
-        }
+        output = new StringBuilder();
+        List<String> historyToPrint = history.stream()
+                .limit(Math.min(10, history.size()))
+                .collect(Collectors.toList());
+        Collections.reverse(historyToPrint);
+        historyToPrint.forEach(output::append);
+
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output.toString());
     }
 }

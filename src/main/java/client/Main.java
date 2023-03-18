@@ -17,6 +17,7 @@ import javax.xml.bind.UnmarshalException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -43,6 +44,9 @@ public class Main {
                 ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
                 ArrayList<String> commandWithArguments = parsedString.getArray();
                 Ticket ticket = parsedString.getTicket();
+                if (Objects.equals(commandWithArguments.get(0), "exit")){
+                    System.exit(0);
+                }
                 Request request = new Request(commandWithArguments, ticket);
                 networkConnection.connectionManage(request);
 //                Response response = networkConnection.getReturnResponse();

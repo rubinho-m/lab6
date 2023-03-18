@@ -55,7 +55,6 @@ public class NetworkConnection {
                 SelectionKey key = keyIterator.next();
                 if (key.isConnectable()) {
                     if (socketChannel.finishConnect()) {
-                        System.out.println("Подключен к серверу");
                         socketChannel.register(selector, SelectionKey.OP_WRITE);
                     }
                 }
@@ -71,7 +70,6 @@ public class NetworkConnection {
                     while (buf.hasRemaining()) {
                         socketChannel.write(buf);
                     }
-                    System.out.println(request.getCommandWithArguments());
                     buf.clear();
                     out.close();
                     objectOutputStream.close();

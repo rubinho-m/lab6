@@ -13,8 +13,11 @@ import common.structureClasses.Ticket;
 import server.collectionManagement.CollectionManager;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MinByPriceCommand extends CommandTemplate implements CommandWithResponse{
+    private StringBuilder output;
     public MinByPriceCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
@@ -22,23 +25,21 @@ public class MinByPriceCommand extends CommandTemplate implements CommandWithRes
     @Override
     public void execute() throws EmptyCollectionException {
         Set<Ticket> tickets = getCollectionManager().getCollection();
+        output = new StringBuilder();
         if (tickets.size() == 0){
-            throw new EmptyCollectionException();
+            output.append("Collection is empty, please add ticket");
         }
-        List<Double> prices = new ArrayList<>();
-        Map<Double, Ticket> ticketMap = new HashMap<>();
-        for (Ticket ticket : tickets){
-            prices.add(ticket.getPrice());
-            ticketMap.put(ticket.getPrice(), ticket);
-        }
-        Double minPrice = Collections.min(prices);
+        Map<Double, Ticket> ticketMap = tickets.stream()
+                .collect(Collectors.toMap(Ticket::getPrice, Function.identity()));
+        Double minPrice = Collections.min(ticketMap.keySet());
         Ticket ticketToPrint = ticketMap.get(minPrice);
-        System.out.println(ticketToPrint);
+        output.append(ticketToPrint);
+
 
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        return new Response(output.toString());
     }
 }

@@ -28,7 +28,7 @@ public class HelpCommand extends CommandTemplate implements CommandWithResponse{
                 "add_if_min: add the new element to collection if it is lower than min of collection" + "\n" +
                 "remove_greater: remove all collection elements which are greater than entered" + "\n" +
                 "history: display 10 last commands" + "\n" +
-                "min_by_price: display any collection element which is lower than entered" + "\n" +
+                "min_by_price: display min by price collection element" + "\n" +
                 "filter_greater_than_price: display elements which have price greater than entered" + "\n" +
                 "print_field_descending_venue: display all venue values in descending order");
     }

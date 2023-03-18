@@ -15,6 +15,6 @@ public class HistoryManager {
     }
 
     public static void addToHistory(String command) {
-        historyCommands.add(command);
+        historyCommands.add(command + "\n");
     }
 }

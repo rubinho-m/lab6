@@ -8,6 +8,7 @@ import common.structureClasses.Ticket;
 
 import javax.xml.bind.annotation.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -80,15 +81,19 @@ public class CollectionManager {
         return (Ticket) tickets.toArray()[0];
     }
 
-    public void printCollection() {
+    public StringBuilder printCollection() {
+        StringBuilder output = new StringBuilder();
         if (tickets.size() == 0) {
-            System.out.println("Collection is empty" + "\n");
+            output.append("Collection is empty" + "\n");
         } else {
-            System.out.println("Collection:" + "\n");
+            output.append("Collection:" + "\n");
         }
-        for (Ticket ticket : tickets) {
-            System.out.println(ticket + "\n" + "\n");
-        }
+        tickets.stream()
+                .sorted(Comparator.comparing(ticket -> ticket.getCoordinates()))
+                .map(ticket -> ticket + "\n" + "\n")
+                .forEach(output::append);
+
+        return output;
     }
 
 

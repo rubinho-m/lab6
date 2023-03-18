@@ -18,30 +18,50 @@ import java.util.Collections;
 import java.util.List;
 
 public class PrintFieldDescendingVenueCommand extends CommandTemplate implements CommandWithResponse{
+    private StringBuilder output;
+    private boolean flag;
     public PrintFieldDescendingVenueCommand(CollectionManager collectionManager) {
         super(collectionManager);
     }
 
     @Override
     public void execute() throws EmptyCollectionException {
-        List<Venue> venues = new ArrayList<>();
-        if (getCollectionManager().getCollection().size() == 0){
-            throw new EmptyCollectionException();
-        }
-        for (Ticket ticket: getCollectionManager().getCollection()){
-            if (ticket.getVenue() != null){
-                venues.add(ticket.getVenue());
+        try {
+            List<Venue> venues = new ArrayList<>();
+            output = new StringBuilder();
+            flag = true;
+            if (getCollectionManager().getCollection().size() == 0) {
+                output.append("Collection is empty, please add ticket");
             }
-        }
-        Collections.sort(venues);
-        Collections.reverse(venues);
-        for (Venue venue : venues){
-            System.out.println(venue);
+            for (Ticket ticket : getCollectionManager().getCollection()) {
+                if (ticket.getVenue() != null) {
+                    venues.add(ticket.getVenue());
+                }
+            }
+            System.out.println("A");
+            System.out.println(venues);
+            if (venues.size() != 0) {
+                Collections.sort(venues);
+                Collections.reverse(venues);
+            }
+            System.out.println("B");
+            for (Venue venue : venues) {
+                output.append(venue);
+                flag = false;
+            }
+            System.out.println("C");
+            System.out.println(output.toString());
+            if (flag) {
+                output.append("No tickets have venues");
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
     @Override
     public Response getCommandResponse() {
-        return null;
+        System.out.println(output.toString());
+        return new Response(output.toString());
     }
 }
