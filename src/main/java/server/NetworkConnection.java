@@ -35,56 +35,6 @@ public class NetworkConnection {
         this.commandExecutor = commandExecutor;
 
     }
-//    public void start() throws IOException {
-//        try {
-//            serverSocket = new ServerSocket(port);
-//            System.out.println("Server started on port " + port);
-//
-//            while (true) {
-//                Socket clientSocket = serverSocket.accept();
-//                System.out.println(clientSocket.getLocalAddress());
-//                System.out.println("New client connected: " + clientSocket.getInetAddress().getHostAddress());
-//                while (true) {
-//                    try {
-//                        ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
-//                        request = (Request) objectInputStream.readObject();
-//
-//                        ArrayList<String> commandWithArguments = request.getCommandWithArguments();
-//                        System.out.println(commandWithArguments);
-//                        Ticket ticket = (Ticket) request.getTicket();
-//                        ParsedString<ArrayList<String>, Ticket> parsedString = new ParsedString<>(commandWithArguments, ticket);
-//                        Response response = commandExecutor.execute(parsedString);
-//
-//                        OutputStream outputStream = clientSocket.getOutputStream();
-//                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-//                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-//                        objectOutputStream.writeObject(response);
-//                        byte[] newArray = byteArrayOutputStream.toByteArray();
-//                        outputStream.write(newArray);
-//
-//                        System.out.println("Sent response: " + response);
-//                    } catch (Exception e){
-//                        System.out.println(e);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            stop();
-//        }
-//    }
-//
-//    public void stop() {
-//        try {
-//            if (serverSocket != null) {
-//                serverSocket.close();
-//            }
-//            System.out.println("Server stopped.");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
     public void handleCommand(){
 
     }
@@ -108,12 +58,17 @@ public class NetworkConnection {
                     ParsedString<ArrayList<String>, Ticket> parsedString = new ParsedString<>(commandWithArguments, ticket);
                     Response response = commandExecutor.execute(parsedString);
 
+                    System.out.println(response.getOutput());
+
+//                    clientSocket.setSoTimeout(1000);
+
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
                     objectOutputStream.writeObject(response);
                     byte[] newArray = byteArrayOutputStream.toByteArray();
                     outputStream.write(newArray);
                     outputStream.flush();
+                    clientSocket.setSoTimeout(1000);
                 }
             } catch (Exception e) {
                 System.out.println("Client disconnected: " + e.getMessage());
@@ -147,4 +102,3 @@ public class NetworkConnection {
 //        outputStream.write(newArray);
 //
 //    }
-

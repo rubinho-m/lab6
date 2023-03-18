@@ -20,18 +20,7 @@ public class Main {
         collectionManager.setPath(args[0]);
         CommandExecutor commandExecutor = new CommandExecutor();
         commandExecutor.setCommands(collectionManager);
-        NetworkConnection networkConnection = new NetworkConnection(2828, collectionManager, commandExecutor);
+        NetworkConnection networkConnection = new NetworkConnection(28, collectionManager, commandExecutor);
         networkConnection.start();
-
-//
-//        while (true){
-//            RequesArrayList<String> commandWithArguments = request.getCommandWithArguments();
-////            System.out.println(commandWithArguments);
-////            Ticket ticket = (Ticket) request.getTicket();
-////            ParsedString<ArrayList<String>, Ticket> parsedString = new ParsedString<>(commandWithArguments, ticket);
-////            Response response = commandExecutor.execute(parsedString);t request = networkConnection.receive();
-//
-//            networkConnection.send(response, request.getHost());
-//        }
     }
 }

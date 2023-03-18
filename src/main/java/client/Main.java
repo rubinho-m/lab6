@@ -37,7 +37,7 @@ public class Main {
 //
             Scanner scanner = new Scanner(System.in);
             CommandParser commandParser = new CommandParser();
-            NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 2828);
+            NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 28);
 
             while (true) {
                 ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
@@ -45,8 +45,8 @@ public class Main {
                 Ticket ticket = parsedString.getTicket();
                 Request request = new Request(commandWithArguments, ticket);
                 networkConnection.connectionManage(request);
-                Response response = networkConnection.getReturnResponse();
-                System.out.println(response.getOutput());
+//                Response response = networkConnection.getReturnResponse();
+//                System.out.println(response.getOutput());
             }
 
 
