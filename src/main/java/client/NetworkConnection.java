@@ -1,10 +1,7 @@
 package client;
 
-import client.io.commandParsing.CommandParser;
-import common.dataStructures.ParsedString;
 import common.networkStructures.Request;
 import common.networkStructures.Response;
-import common.structureClasses.Ticket;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -12,14 +9,10 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Scanner;
-import java.util.Set;
 
 public class NetworkConnection {
     private final int BUFFER_SIZE = 1024 * 1024;
@@ -33,10 +26,6 @@ public class NetworkConnection {
     public NetworkConnection(String address, int port) throws UnknownHostException {
         host = InetAddress.getByName(address);
         this.socketAddress = new InetSocketAddress(host, port);
-    }
-
-    public Response getReturnResponse() {
-        return returnResponse;
     }
 
     public void connectionManage(Request request) throws Exception {

@@ -6,17 +6,16 @@ package client; /**
  * command execution, the exception message is printed to the console.
  */
 
+import common.commands.ExecuteScriptCommand;
 import common.dataStructures.ParsedString;
 import common.networkStructures.Request;
-import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import common.exceptions.XMLTroubleException;
-import client.io.commandParsing.CommandParser;
+import common.commandParsing.CommandParser;
 
-import javax.xml.bind.UnmarshalException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -44,36 +43,34 @@ public class Main {
                 ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
                 ArrayList<String> commandWithArguments = parsedString.getArray();
                 Ticket ticket = parsedString.getTicket();
-                if (Objects.equals(commandWithArguments.get(0), "exit")){
+                if (Objects.equals(commandWithArguments.get(0), "exit")) {
                     System.exit(0);
                 }
-                Request request = new Request(commandWithArguments, ticket);
-                networkConnection.connectionManage(request);
-//                Response response = networkConnection.getReturnResponse();
-//                System.out.println(response.getOutput());
+                ArrayList<ParsedString<ArrayList<String>, Ticket>> firstToDoCommands = new ArrayList<>();
+                if (commandWithArguments.get(0).equals("execute_script")) {
+                    try {
+                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(commandWithArguments.get(1));
+                        executeScriptCommand.execute();
+                        ArrayList<ParsedString<ArrayList<String>, Ticket>> nextCommand = executeScriptCommand.getNextCommand();
+                        firstToDoCommands = nextCommand;
+                    } catch (Exception e) {
+                        System.out.println("Incorrect path to script");
+                    }
+
+
+                } else {
+                    firstToDoCommands.add(parsedString);
+                }
+                firstToDoCommands.removeAll(Collections.singleton(null));
+
+                for (ParsedString<ArrayList<String>, Ticket> ps : firstToDoCommands) {
+                    Request request = new Request(ps.getArray(), ps.getTicket());
+                    networkConnection.connectionManage(request);
+                }
+
             }
 
-
-//            CommandExecutor commandExecutor = new CommandExecutor();
-//            commandExecutor.setCommands(collectionManager);
-
-
-
-//            while (true) {
-//                try {
-//                    ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
-//                    ArrayList<String> commandWithArguments = parsedString.getArray();
-//                    Ticket ticket = parsedString.getTicket();
-//
-//
-//                } catch (NoSuchElementException e) {
-//                    break;
-//                }
-//                catch (Exception e) {
-//                    System.out.println(e.getMessage());
-//                }
-//            }
-        } catch (XMLTroubleException e){
+        } catch (XMLTroubleException e) {
             System.exit(1);
         }
 

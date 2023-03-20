@@ -1,2 +1,1 @@
-info
-info
+execute_script src/main/java/common/data/script2.txt

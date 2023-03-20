@@ -56,7 +56,7 @@ public class CommandExecutor {
         commandMap.put("min_by_price", new MinByPriceCommand(collectionManager));
         commandMap.put("filter_greater_than_price", new FilterGreaterThanPriceCommand(collectionManager));
         commandMap.put("print_field_descending_venue", new PrintFieldDescendingVenueCommand(collectionManager));
-        commandMap.put("execute_script", new ExecuteScriptCommand(collectionManager, this));
+//        commandMap.put("execute_script", new ExecuteScriptCommand(collectionManager));
     }
 
     public Response execute(ParsedString<ArrayList<String>, Ticket> parsedString) throws Exception {

@@ -36,7 +36,7 @@ public class NetworkConnection {
 
     }
 
-    public void start() throws IOException {
+    public void start() throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server started on port " + port);
         Reader reader = new Reader(serverSocket, commandExecutor);
@@ -47,27 +47,3 @@ public class NetworkConnection {
 
 
 }
-//    public Request receive() throws IOException, ClassNotFoundException {
-//        Request request;
-//
-//        InputStream inputStream = clientSocket.getInputStream();
-//
-//        byte[] arr = new byte[BUFFER_SIZE];
-//        int bytesRead = inputStream.read(arr);
-//
-//        byteArrayInputStream = new ByteArrayInputStream(arr, 0, bytesRead);
-//        ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(byteArrayInputStream.readAllBytes()));
-//
-//        request = (Request) objectInputStream.readObject();
-//        return request;
-//    }
-//
-//    public void send(Response response, InetAddress host) throws IOException {
-//        OutputStream outputStream = clientSocket.getOutputStream();
-//        byteArrayOutputStream = new ByteArrayOutputStream();
-//        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-//        objectOutputStream.writeObject(response);
-//        byte[] newArray = byteArrayOutputStream.toByteArray();
-//        outputStream.write(newArray);
-//
-//    }

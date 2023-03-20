@@ -22,7 +22,6 @@ public class HelpCommand extends CommandTemplate implements CommandWithResponse{
                 "update: update the value of collection element if its id equals entered" + "\n" +
                 "remove_by_id: remove collection element according to id" + "\n" +
                 "clear: clear collection" + "\n" +
-                "save: save collection to file" + "\n" +
                 "execute_script: execute commands from the file" + "\n" +
                 "exit: exit the program" + "\n" +
                 "add_if_min: add the new element to collection if it is lower than min of collection" + "\n" +

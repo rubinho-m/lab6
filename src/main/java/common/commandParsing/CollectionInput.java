@@ -4,7 +4,7 @@
  * It also prompts the user to optionally enter the type of ticket and venue.
  */
 
-package client.io.commandParsing;
+package common.commandParsing;
 
 
 import common.exceptions.WrongScriptException;

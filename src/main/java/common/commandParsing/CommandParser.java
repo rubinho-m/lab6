@@ -2,7 +2,7 @@
  * The CommandParser class is responsible for parsing commands from terminal or script.
  */
 
-package client.io.commandParsing;
+package common.commandParsing;
 
 import common.dataStructures.ParsedString;
 import common.structureClasses.Ticket;

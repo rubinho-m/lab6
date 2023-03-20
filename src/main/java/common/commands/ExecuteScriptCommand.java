@@ -12,44 +12,57 @@ import server.collectionManagement.CollectionManager;
 import server.collectionManagement.CommandExecutor;
 import common.dataStructures.ParsedString;
 import common.exceptions.ScriptRecursionException;
-import client.io.commandParsing.CommandParser;
+import common.commandParsing.CommandParser;
 import common.structureClasses.Ticket;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 
-public class ExecuteScriptCommand extends CommandTemplate implements CommandWithResponse {
-    private final CommandExecutor commandExecutor;
+public class ExecuteScriptCommand{
+    private static Set<String> paths = new HashSet<>();
 
-    public ExecuteScriptCommand(CollectionManager collectionManager, CommandExecutor commandExecutor) {
-        super(collectionManager);
-        this.commandExecutor = commandExecutor;
+    private String arg;
+    private ArrayList<ParsedString<ArrayList<String>, Ticket>> allParsedStrings = new ArrayList<>();
+    private ParsedString<ArrayList<String>, Ticket> parsedString;
+
+    public ExecuteScriptCommand(String arg) {
+        this.arg = arg;
     }
 
-    @Override
     public void execute() throws ScriptRecursionException {
         try {
-            File file = new File(getArg());
+
+            File file = new File(arg);
             Scanner scanner = new Scanner(file);
             CommandParser commandParser = new CommandParser();
-            if (commandExecutor.getPaths().contains(getArg())) {
+            if (paths.contains(arg)) {
                 throw new ScriptRecursionException();
             }
-            commandExecutor.addToPaths(getArg());
+            paths.add(arg);
             while (true) {
                 try {
-                    ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, true);
-                    commandExecutor.execute(parsedString);
+                    parsedString = commandParser.readCommand(scanner, true);
+                    if (paths.contains(parsedString.getArray().get(1))){
+                        System.out.println("Looping scripts... Please fix it");
+                        throw new ScriptRecursionException();
+                    }
+                    if (Objects.equals(parsedString.getArray().get(0), "execute_script")){
+                        ExecuteScriptCommand scriptCommand = new ExecuteScriptCommand(parsedString.getArray().get(1));
+                        scriptCommand.execute();
+                        allParsedStrings.addAll(scriptCommand.getNextCommand());
+                    } else {
+                        allParsedStrings.add(parsedString);
+                    }
                 } catch (Exception e) {
+
                     break;
                 }
             }
-            commandExecutor.clearPaths();
+            paths.clear();
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Incorrect path to script");
         }catch (ScriptRecursionException e){
             System.out.println("Looping scripts... Please fix it");
         }
@@ -59,8 +72,7 @@ public class ExecuteScriptCommand extends CommandTemplate implements CommandWith
 
     }
 
-    @Override
-    public Response getCommandResponse() {
-        return null;
+    public ArrayList<ParsedString<ArrayList<String>, Ticket>> getNextCommand(){
+        return allParsedStrings;
     }
 }
