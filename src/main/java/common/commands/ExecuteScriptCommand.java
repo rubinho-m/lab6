@@ -44,11 +44,11 @@ public class ExecuteScriptCommand{
             while (true) {
                 try {
                     parsedString = commandParser.readCommand(scanner, true);
-                    if (paths.contains(parsedString.getArray().get(1))){
-                        System.out.println("Looping scripts... Please fix it");
-                        throw new ScriptRecursionException();
-                    }
                     if (Objects.equals(parsedString.getArray().get(0), "execute_script")){
+                        if (paths.contains(parsedString.getArray().get(1))){
+                            System.out.println("Looping scripts... Please fix it");
+                            throw new ScriptRecursionException();
+                        }
                         ExecuteScriptCommand scriptCommand = new ExecuteScriptCommand(parsedString.getArray().get(1));
                         scriptCommand.execute();
                         allParsedStrings.addAll(scriptCommand.getNextCommand());
