@@ -5,6 +5,8 @@
 package common.commandParsing;
 
 import common.dataStructures.ParsedString;
+import common.exceptions.NoCommandException;
+import common.exceptions.WrongCommandFormat;
 import common.structureClasses.Ticket;
 
 import java.util.*;
@@ -25,10 +27,10 @@ public class CommandParser {
         hasWrongFormat = false;
         handleCommand(lineArr);
         if (hasWrongCommand){
-            throw new Exception("Нет такой команды");
+            throw new NoCommandException("Нет такой команды");
         }
         if (hasWrongFormat){
-            throw new Exception("Неправильный формат команды");
+            throw new WrongCommandFormat("Неправильный формат команды");
         }
         if (isCollectionCommand){
             ticket = new CollectionInput(scanner, isFile).getCollection();

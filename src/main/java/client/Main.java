@@ -8,12 +8,15 @@ package client; /**
 
 import common.commands.ExecuteScriptCommand;
 import common.dataStructures.ParsedString;
+import common.exceptions.NoCommandException;
+import common.exceptions.WrongCommandFormat;
 import common.networkStructures.Request;
 import common.structureClasses.Ticket;
 import common.exceptions.XMLTroubleException;
 import common.commandParsing.CommandParser;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
@@ -30,42 +33,42 @@ public class Main {
      */
     public static void main(String[] args) throws Exception {
         try {
-//            CollectionManager collectionManager = new CollectionManager();
-//            TicketXMLParser xmlParser = new TicketXMLParser(args[0]);
-//            collectionManager.setCollection(xmlParser.parse());
-//            collectionManager.setPath(args[0]);
-//
             Scanner scanner = new Scanner(System.in);
             CommandParser commandParser = new CommandParser();
             NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 28);
 
             while (true) {
-                ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
-                ArrayList<String> commandWithArguments = parsedString.getArray();
-                Ticket ticket = parsedString.getTicket();
-                if (Objects.equals(commandWithArguments.get(0), "exit")) {
-                    System.exit(0);
-                }
-                ArrayList<ParsedString<ArrayList<String>, Ticket>> firstToDoCommands = new ArrayList<>();
-                if (commandWithArguments.get(0).equals("execute_script")) {
-                    try {
-                        ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(commandWithArguments.get(1));
-                        executeScriptCommand.execute();
-                        ArrayList<ParsedString<ArrayList<String>, Ticket>> nextCommand = executeScriptCommand.getNextCommand();
-                        firstToDoCommands = nextCommand;
-                    } catch (Exception e) {
-                        System.out.println("Incorrect path to script");
+                try {
+                    ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
+                    ArrayList<String> commandWithArguments = parsedString.getArray();
+                    if (Objects.equals(commandWithArguments.get(0), "exit")) {
+                        System.exit(0);
                     }
+                    ArrayList<ParsedString<ArrayList<String>, Ticket>> firstToDoCommands = new ArrayList<>();
+                    if (commandWithArguments.get(0).equals("execute_script")) {
+                        try {
+                            ExecuteScriptCommand executeScriptCommand = new ExecuteScriptCommand(commandWithArguments.get(1));
+                            executeScriptCommand.execute();
+                            ArrayList<ParsedString<ArrayList<String>, Ticket>> nextCommand = executeScriptCommand.getNextCommand();
+                            firstToDoCommands = nextCommand;
+                        } catch (Exception e) {
+                            System.out.println("Incorrect path to script");
+                        }
 
 
-                } else {
-                    firstToDoCommands.add(parsedString);
-                }
-                firstToDoCommands.removeAll(Collections.singleton(null));
+                    } else {
+                        firstToDoCommands.add(parsedString);
+                    }
+                    firstToDoCommands.removeAll(Collections.singleton(null));
 
-                for (ParsedString<ArrayList<String>, Ticket> ps : firstToDoCommands) {
-                    Request request = new Request(ps.getArray(), ps.getTicket());
-                    networkConnection.connectionManage(request);
+                    for (ParsedString<ArrayList<String>, Ticket> ps : firstToDoCommands) {
+                        Request request = new Request(ps.getArray(), ps.getTicket());
+                        networkConnection.connectionManage(request);
+                    }
+                } catch (NoCommandException |WrongCommandFormat ignored) {
+
+                } catch (ConnectException e){
+                    System.out.println("Сервер временно недоступен");
                 }
 
             }
