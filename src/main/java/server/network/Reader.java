@@ -61,7 +61,7 @@ public class Reader {
                     if (System.in.available() > 0) {
                         Scanner scanner = new Scanner(System.in);
                         CommandParser commandParser = new CommandParser();
-                        ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, true);
+                        ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, true, true);
                         if (serverCommands.contains(parsedString.getArray().get(0))) {
                             Handler handler = new Handler(commandExecutor, true);
                             handler.handleCommand(parsedString);

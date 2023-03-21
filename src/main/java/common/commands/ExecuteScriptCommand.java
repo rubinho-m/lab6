@@ -43,7 +43,7 @@ public class ExecuteScriptCommand{
             paths.add(arg);
             while (true) {
                 try {
-                    parsedString = commandParser.readCommand(scanner, true);
+                    parsedString = commandParser.readCommand(scanner, true, false);
                     if (Objects.equals(parsedString.getArray().get(0), "execute_script")){
                         if (paths.contains(parsedString.getArray().get(1))){
                             System.out.println("Looping scripts... Please fix it");

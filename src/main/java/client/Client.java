@@ -44,7 +44,7 @@ public class Client {
 
             while (true) {
                 try {
-                    ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false);
+                    ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, false, false);
                     ArrayList<String> commandWithArguments = parsedString.getArray();
                     if (Objects.equals(commandWithArguments.get(0), "exit")) {
                         System.exit(0);

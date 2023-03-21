@@ -16,7 +16,7 @@ public class CommandParser {
     private boolean hasWrongFormat = false;
     private boolean isCollectionCommand;
     private Ticket ticket = null;
-    public ParsedString<ArrayList<String>, Ticket> readCommand(Scanner scanner, boolean isFile) throws Exception {
+    public ParsedString<ArrayList<String>, Ticket> readCommand(Scanner scanner, boolean isFile, boolean isServer) throws Exception {
         isCollectionCommand = false;
         if (!isFile) {
             System.out.println("Please, enter a command:");
@@ -27,7 +27,9 @@ public class CommandParser {
         hasWrongFormat = false;
         handleCommand(lineArr);
         if (hasWrongCommand){
-            throw new NoCommandException("Нет такой команды");
+            if (!isServer) {
+                throw new NoCommandException("Нет такой команды");
+            }
         }
         if (hasWrongFormat){
             throw new WrongCommandFormat("Неправильный формат команды");

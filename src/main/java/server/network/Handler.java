@@ -22,7 +22,8 @@ public class Handler {
         this.outputStream = outputStream;
         this.isServerCommand = isServerCommand;
     }
-    public Handler(CommandExecutor commandExecutor,  boolean isServerCommand) {
+
+    public Handler(CommandExecutor commandExecutor, boolean isServerCommand) {
         this.commandExecutor = commandExecutor;
         this.isServerCommand = isServerCommand;
     }
@@ -30,13 +31,13 @@ public class Handler {
     public void handleCommand(ParsedString<ArrayList<String>, Ticket> parsedString) throws Exception {
         Response response = commandExecutor.execute(parsedString);
         logger.info("COMMAND HAS BEEN EXECUTED");
-        if (!parsedString.getArray().get(0).equals("save")){
+        if (!parsedString.getArray().get(0).equals("save")) {
             ArrayList<String> save = new ArrayList<>();
             save.add("save");
             ParsedString<ArrayList<String>, Ticket> saveString = new ParsedString<>(save);
             Response saveResponse = commandExecutor.execute(saveString);
-            logger.info("SAVED COLLECTION TO XML FILE");
         }
+        logger.info("SAVED COLLECTION TO XML FILE");
         if (!isServerCommand) {
             Writer writer = new Writer(outputStream);
             writer.write(response);
