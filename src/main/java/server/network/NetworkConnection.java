@@ -4,6 +4,9 @@ import common.dataStructures.ParsedString;
 import common.networkStructures.Request;
 import common.networkStructures.Response;
 import common.structureClasses.Ticket;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import server.Server;
 import server.collectionManagement.CollectionManager;
 import server.collectionManagement.CommandExecutor;
 
@@ -28,6 +31,7 @@ public class NetworkConnection {
     private CommandExecutor commandExecutor;
     private Request request;
     private Response response;
+    private static final Logger logger = LogManager.getLogger(NetworkConnection.class);
 
     public NetworkConnection(int port, CollectionManager collectionManager, CommandExecutor commandExecutor) throws IOException {
         this.port = port;
@@ -38,7 +42,7 @@ public class NetworkConnection {
 
     public void start() throws Exception {
         ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server started on port " + port);
+        logger.info("SERVER STARTED ON PORT " + port);
         Reader reader = new Reader(serverSocket, commandExecutor);
         reader.read();
 

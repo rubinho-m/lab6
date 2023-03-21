@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-public class Main {
+public class Client {
     /**
      * The main method is the entry point of the application.
      *
@@ -32,10 +32,15 @@ public class Main {
      * @throws XMLTroubleException if there is an error parsing the XML file.
      */
     public static void main(String[] args) throws Exception {
+        if (args.length != 2){
+            System.out.println("Введите адрес сервера и порт");
+            System.exit(1);
+        }
         try {
+            int port = Integer.parseInt(args[1]);
             Scanner scanner = new Scanner(System.in);
             CommandParser commandParser = new CommandParser();
-            NetworkConnection networkConnection = new NetworkConnection("127.0.0.1", 28);
+            NetworkConnection networkConnection = new NetworkConnection(args[0], port);
 
             while (true) {
                 try {
@@ -65,15 +70,18 @@ public class Main {
                         Request request = new Request(ps.getArray(), ps.getTicket());
                         networkConnection.connectionManage(request);
                     }
-                } catch (NoCommandException |WrongCommandFormat ignored) {
+                } catch (NoCommandException | WrongCommandFormat ignored) {
 
-                } catch (ConnectException e){
+                } catch (ConnectException e) {
                     System.out.println("Сервер временно недоступен");
                 }
 
             }
 
         } catch (XMLTroubleException e) {
+            System.exit(1);
+        } catch (NumberFormatException e){
+            System.out.println("Порт должен быть числом");
             System.exit(1);
         }
 

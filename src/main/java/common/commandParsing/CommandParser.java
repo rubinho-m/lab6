@@ -45,7 +45,6 @@ public class CommandParser {
             add("info");
             add("show");
             add("clear");
-            add("save");
             add("exit");
             add("history");
             add("min_by_price");
