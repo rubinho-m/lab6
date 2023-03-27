@@ -10,6 +10,7 @@ import server.network.NetworkConnection;
 import server.xml.TicketXMLParser;
 
 import java.net.BindException;
+import java.net.SocketException;
 
 
 public class Server {
@@ -41,6 +42,10 @@ public class Server {
         } catch (BindException e) {
             System.out.println("Порт занят, введите другой");
             logger.error("PORT HAS ALREADY USED");
+            System.exit(1);
+        } catch (SocketException e){
+            System.out.println("Данный порт является системным, введите другой");
+            logger.error("SYSTEM PORT ERROR");
             System.exit(1);
         }
 

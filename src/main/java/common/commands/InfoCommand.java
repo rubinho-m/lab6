@@ -19,7 +19,6 @@ public class InfoCommand extends CommandTemplate implements CommandWithResponse 
     @Override
     public void execute() {
         try {
-            System.out.println("INFO");
             output = new StringBuilder();
             CollectionManager collection = getCollectionManager();
             output.append("Type of collection: Ticket" + "\n" +
