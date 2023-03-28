@@ -5,12 +5,12 @@ import common.dataStructures.ParsedString;
 import common.exceptions.NoCommandException;
 import common.exceptions.WrongCommandFormat;
 import common.networkStructures.Request;
-import common.networkStructures.Response;
 import common.structureClasses.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import server.Server;
 import server.collectionManagement.CommandExecutor;
+import sun.misc.SignalHandler;
+import sun.misc.Signal;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -21,6 +21,7 @@ import java.util.*;
 public class Reader {
     private ServerSocket serverSocket;
     private CommandExecutor commandExecutor;
+    private boolean ctrlPressed = false;
     private Set<String> serverCommands = new HashSet<>() {{
         add("save");
         add("exit");
@@ -56,24 +57,41 @@ public class Reader {
                 } catch (Exception e) {
                     logger.info("Client disconnected: " + e.getMessage());
                 }
-            } catch (SocketTimeoutException e){
+            } catch (SocketTimeoutException e) {
                 try {
+                    SignalHandler signalHandler = signal -> {
+                        if (signal.getName().equals("INT")) {
+                            System.exit(0);
+                        }
+                    };
+
+                    Signal.handle(new Signal("INT"), signalHandler);
+
+
+                    Scanner scanner = new Scanner(System.in);
                     if (System.in.available() > 0) {
-                        Scanner scanner = new Scanner(System.in);
                         CommandParser commandParser = new CommandParser();
                         ParsedString<ArrayList<String>, Ticket> parsedString = commandParser.readCommand(scanner, true, true);
                         if (serverCommands.contains(parsedString.getArray().get(0))) {
                             Handler handler = new Handler(commandExecutor, true);
                             handler.handleCommand(parsedString);
+                        } else {
+                            System.out.println("Нет такой команды");
+                            logger.info("NOT SERVER COMMAND");
                         }
                     }
+
                 } catch (NoCommandException | WrongCommandFormat ignored) {
                     logger.error("WRONG COMMAND HAS BEEN INPUT");
 
+                } catch (NoSuchElementException el) {
+                    System.exit(0);
                 }
             }
 
 
         }
     }
+
+
 }

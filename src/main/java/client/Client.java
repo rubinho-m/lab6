@@ -17,10 +17,7 @@ import common.commandParsing.CommandParser;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Client {
@@ -86,6 +83,8 @@ public class Client {
         } catch (NumberFormatException e){
             System.out.println("Порт должен быть числом");
             System.exit(1);
+        } catch (NoSuchElementException e){
+            System.exit(0);
         }
 
 
