@@ -17,6 +17,7 @@ import common.commandParsing.CommandParser;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.UnknownHostException;
 import java.util.*;
 
 
@@ -85,6 +86,8 @@ public class Client {
             System.exit(1);
         } catch (NoSuchElementException e){
             System.exit(0);
+        } catch (UnknownHostException e){
+            System.out.println("Неправильный адрес сервера");
         }
 
 

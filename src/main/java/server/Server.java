@@ -2,6 +2,7 @@ package server;
 
 import common.exceptions.NoCommandException;
 import common.exceptions.WrongCommandFormat;
+import common.exceptions.XMLTroubleException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.collectionManagement.CollectionManager;
@@ -46,6 +47,10 @@ public class Server {
         } catch (SocketException e){
             System.out.println("Данный порт является системным, введите другой");
             logger.error("SYSTEM PORT ERROR");
+            System.exit(1);
+        } catch (XMLTroubleException e){
+            System.out.println("Some troubles with xml file, please fix it");
+            logger.error("INCORRECT XML FILE");
             System.exit(1);
         }
 
